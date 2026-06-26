@@ -48,13 +48,19 @@ class PembayaranController extends Controller
         $pembayaran = $pemesanan->pembayaran;
 
         if (!$pembayaran) {
-            return back()->with('error', 'Bukti pembayaran belum diunggah oleh pelanggan.');
+            $pembayaran = new Pembayaran([
+                'id_pemesanan'   => $pemesanan->id_pemesanan,
+                'tgl_bayar'      => now()->toDateString(),
+                'jumlah_bayar'   => $pemesanan->total_harga,
+                'bukti_transfer' => null,
+                'metode_bayar'   => 'transfer_bank',
+                'status_bayar'   => 'menunggu',
+            ]);
         }
 
         if ($request->status === 'dikonfirmasi') {
-            $pembayaran->update([
-                'status_bayar' => 'dikonfirmasi',
-            ]);
+            $pembayaran->status_bayar = 'dikonfirmasi';
+            $pembayaran->save();
 
             $pemesanan->update([
                 'status_pesan' => 'dikonfirmasi',
@@ -78,9 +84,8 @@ class PembayaranController extends Controller
 
             $msg = 'Pembayaran berhasil dikonfirmasi dan jadwal sewa telah terkunci.';
         } else {
-            $pembayaran->update([
-                'status_bayar' => 'ditolak',
-            ]);
+            $pembayaran->status_bayar = 'ditolak';
+            $pembayaran->save();
 
             $pemesanan->update([
                 'status_pesan' => 'dibatalkan',

@@ -62,7 +62,7 @@
                                 @endif
                             </td>
                             <td class="text-center">
-                                @if($pesanan->pembayaran && $pesanan->pembayaran->status_bayar === 'menunggu')
+                                @if(in_array($pesanan->status_pesan, ['menunggu_pembayaran', 'menunggu_konfirmasi']))
                                     <div class="flex gap-2 justify-center">
                                         <!-- Reject Form -->
                                         <form action="{{ route('pemilik.pembayaran.konfirmasi', $pesanan->id_pemesanan) }}" method="POST" class="inline">
@@ -82,12 +82,10 @@
                                             </button>
                                         </form>
                                     </div>
-                                @elseif($pesanan->pembayaran)
-                                    <span class="badge {{ $pesanan->pembayaran->status_label['class'] }}">
-                                        {{ $pesanan->pembayaran->status_label['label'] }}
-                                    </span>
                                 @else
-                                    <span class="text-xs text-slate-400 italic">-</span>
+                                    <span class="badge {{ $pesanan->status_label['class'] }}">
+                                        {{ $pesanan->status_label['label'] }}
+                                    </span>
                                 @endif
                             </td>
                         </tr>
