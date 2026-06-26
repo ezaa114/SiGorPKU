@@ -28,3 +28,6 @@ Thumbs.db
 
 .vercel
 .env*
+
+/bootstrap/cache/*.php
+!/bootstrap/cache/.gitignore
