@@ -26,24 +26,29 @@
                 <div class="card p-6 flex flex-col justify-between hover:shadow-lg transition-all border border-slate-100">
                     <div>
                         <div class="flex justify-between items-start mb-4">
-                            @if($venue->status === 'aktif')
-                                <span class="badge badge-success gap-1">
-                                    <i class="fa-solid fa-circle-check text-[10px]"></i> Aktif
+                            <div class="flex flex-wrap gap-1.5">
+                                @if($venue->status === 'aktif')
+                                    <span class="badge badge-success gap-1">
+                                        <i class="fa-solid fa-circle-check text-[10px]"></i> Aktif
+                                    </span>
+                                @elseif($venue->status === 'nonaktif')
+                                    <span class="badge badge-gray gap-1">
+                                        <i class="fa-solid fa-eye-slash text-[10px]"></i> Nonaktif
+                                    </span>
+                                @elseif($venue->status === 'renovasi')
+                                    <span class="badge badge-warning gap-1">
+                                        <i class="fa-solid fa-hammer text-[10px] animate-bounce"></i> Renovasi
+                                    </span>
+                                @elseif($venue->status === 'tutup')
+                                    <span class="badge badge-danger gap-1">
+                                        <i class="fa-solid fa-door-closed text-[10px]"></i> Tutup
+                                    </span>
+                                @endif
+                                <span class="badge badge-info gap-1">
+                                    <i class="fa-solid fa-futbol text-[10px]"></i> {{ $venue->lapangans()->count() }} Lapangan
                                 </span>
-                            @elseif($venue->status === 'nonaktif')
-                                <span class="badge badge-gray gap-1">
-                                    <i class="fa-solid fa-eye-slash text-[10px]"></i> Nonaktif
-                                </span>
-                            @elseif($venue->status === 'renovasi')
-                                <span class="badge badge-warning gap-1">
-                                    <i class="fa-solid fa-hammer text-[10px] animate-bounce"></i> Renovasi
-                                </span>
-                            @elseif($venue->status === 'tutup')
-                                <span class="badge badge-danger gap-1">
-                                    <i class="fa-solid fa-door-closed text-[10px]"></i> Tutup
-                                </span>
-                            @endif
-                            <span class="text-xs text-slate-400 font-semibold uppercase tracking-wider">{{ $venue->kecamatan }}</span>
+                            </div>
+                            <span class="text-xs text-slate-400 font-semibold uppercase tracking-wider font-display">{{ $venue->kecamatan }}</span>
                         </div>
                         <h4 class="text-lg font-bold text-slate-800" style="font-family: 'Plus Jakarta Sans', sans-serif;">{{ $venue->nama_venue }}</h4>
                         <p class="text-xs text-slate-500 mt-2 leading-relaxed flex items-start gap-1">
@@ -59,20 +64,20 @@
                     </div>
 
                     <div class="border-t border-slate-100 mt-6 pt-4 flex justify-between items-center">
-                        <span class="text-xs font-bold text-blue-600 bg-blue-50 px-3 py-1 rounded-lg">
-                            {{ $venue->lapangans()->count() }} Lapangan
-                        </span>
+                        <!-- Left: Tutup Hari button -->
+                        <a href="{{ route('pemilik.venue.closures', $venue->id_venue) }}" class="px-3 py-1.5 rounded-xl text-xs font-bold transition-all bg-amber-50 text-amber-700 hover:bg-amber-100/80 border border-amber-100 inline-flex items-center gap-1.5">
+                            <i class="fa-solid fa-calendar-minus text-[10px]"></i> Tutup Hari
+                        </a>
                         
-                        <div class="flex gap-1.5">
-                            <a href="{{ route('pemilik.venue.closures', $venue->id_venue) }}" class="px-2.5 py-1 rounded-lg text-xs font-bold transition-all bg-amber-50 text-amber-700 hover:bg-amber-100 border border-amber-200 inline-flex items-center gap-1">
-                                <i class="fa-solid fa-calendar-minus text-[10px]"></i> Tutup Hari
-                            </a>
-                            <a href="{{ route('pemilik.venue.edit', $venue->id_venue) }}" class="btn-secondary py-1 px-2.5 text-xs font-bold inline-flex items-center gap-1">
+                        <!-- Right: Edit & Hapus link actions -->
+                        <div class="flex items-center gap-3">
+                            <a href="{{ route('pemilik.venue.edit', $venue->id_venue) }}" class="text-xs font-bold text-slate-500 hover:text-blue-600 transition-colors flex items-center gap-1">
                                 <i class="fa-solid fa-pen-to-square text-[10px]"></i> Edit
                             </a>
+                            <span class="w-px h-3 bg-slate-200"></span>
                             <form action="{{ route('pemilik.venue.delete', $venue->id_venue) }}" method="POST" class="inline">
                                 @csrf
-                                <button type="submit" class="btn-danger py-1 px-2.5 text-xs font-bold inline-flex items-center gap-1" onclick="return confirm('Apakah Anda yakin ingin menghapus GOR ini? Seluruh lapangan dan jadwal di dalamnya akan ikut terhapus.')">
+                                <button type="submit" class="text-xs font-bold text-slate-400 hover:text-red-600 transition-colors flex items-center gap-1" onclick="return confirm('Apakah Anda yakin ingin menghapus GOR ini? Seluruh lapangan dan jadwal di dalamnya akan ikut terhapus.')">
                                     <i class="fa-solid fa-trash text-[10px]"></i> Hapus
                                 </button>
                             </form>
