@@ -29,4 +29,9 @@ class Venue extends Model
     {
         return $this->hasMany(Lapangan::class, 'id_venue', 'id_venue');
     }
+
+    public function closures()
+    {
+        return $this->hasMany(VenueClosure::class, 'id_venue', 'id_venue');
+    }
 }

@@ -62,6 +62,11 @@ Route::middleware(['role.pemilik'])->prefix('pemilik')->name('pemilik.')->group(
     Route::post('/venue/{id}/update', [PemilikGor\VenueController::class, 'update'])->name('venue.update');
     Route::post('/venue/{id}/delete', [PemilikGor\VenueController::class, 'destroy'])->name('venue.delete');
 
+    // Venue Closures (Hari Libur)
+    Route::get('/venue/{id}/closures', [PemilikGor\VenueController::class, 'closures'])->name('venue.closures');
+    Route::post('/venue/{id}/closures', [PemilikGor\VenueController::class, 'storeClosure'])->name('venue.closures.store');
+    Route::post('/venue/{id}/closures/{closure_id}/delete', [PemilikGor\VenueController::class, 'destroyClosure'])->name('venue.closures.delete');
+
     // Lapangan Management
     Route::get('/lapangan', [PemilikGor\LapanganController::class, 'index'])->name('lapangan.index');
     Route::get('/lapangan/create', [PemilikGor\LapanganController::class, 'create'])->name('lapangan.create');

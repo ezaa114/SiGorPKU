@@ -4,6 +4,8 @@ namespace App\Http\Controllers\PemilikGor;
 
 use App\Http\Controllers\Controller;
 use App\Models\Venue;
+use App\Models\VenueClosure;
+use App\Models\Pemesanan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -122,5 +124,80 @@ class VenueController extends Controller
         return redirect()
             ->route('pemilik.venue.index')
             ->with('success', 'Venue / GOR beserta seluruh lapangannya berhasil dihapus.');
+    }
+
+    public function closures($id)
+    {
+        $pemilikId = Auth::guard('pemilik')->user()->id_pemilik;
+        $venue = Venue::where('id_pemilik', $pemilikId)->findOrFail($id);
+        
+        $closures = VenueClosure::where('id_venue', $venue->id_venue)
+            ->orderBy('tanggal', 'asc')
+            ->get();
+            
+        return view('pemilik.venue.closures', compact('venue', 'closures'));
+    }
+
+    public function storeClosure(Request $request, $id)
+    {
+        $pemilikId = Auth::guard('pemilik')->user()->id_pemilik;
+        $venue = Venue::where('id_pemilik', $pemilikId)->findOrFail($id);
+        
+        $request->validate([
+            'tanggal'    => 'required|date|after_or_equal:today',
+            'keterangan' => 'nullable|string|max:255',
+        ]);
+
+        // Check if there are active bookings for this venue on the specified date
+        $hasBookings = Pemesanan::whereHas('jadwal.lapangan', function($q) use ($venue) {
+                $q->where('id_venue', $venue->id_venue);
+            })
+            ->whereHas('jadwal', function($q) use ($request) {
+                $q->where('tanggal', $request->tanggal);
+            })
+            ->whereIn('status_pesan', ['menunggu_pembayaran', 'lunas'])
+            ->exists();
+
+        if ($hasBookings) {
+            return redirect()
+                ->back()
+                ->with('error', 'Tidak dapat menutup GOR pada tanggal tersebut karena sudah ada pesanan aktif (lunas/menunggu pembayaran) dari pelanggan.');
+        }
+
+        // Check for duplicates
+        $exists = VenueClosure::where('id_venue', $venue->id_venue)
+            ->where('tanggal', $request->tanggal)
+            ->exists();
+
+        if ($exists) {
+            return redirect()
+                ->back()
+                ->with('error', 'Tanggal tersebut sudah didaftarkan sebagai hari libur.');
+        }
+
+        VenueClosure::create([
+            'id_venue'   => $venue->id_venue,
+            'tanggal'    => $request->tanggal,
+            'keterangan' => $request->keterangan,
+        ]);
+
+        return redirect()
+            ->route('pemilik.venue.closures', $venue->id_venue)
+            ->with('success', 'Hari libur GOR berhasil ditambahkan.');
+    }
+
+    public function destroyClosure($id, $closure_id)
+    {
+        $pemilikId = Auth::guard('pemilik')->user()->id_pemilik;
+        $venue = Venue::where('id_pemilik', $pemilikId)->findOrFail($id);
+        
+        $closure = VenueClosure::where('id_venue', $venue->id_venue)
+            ->findOrFail($closure_id);
+            
+        $closure->delete();
+
+        return redirect()
+            ->route('pemilik.venue.closures', $venue->id_venue)
+            ->with('success', 'Hari libur berhasil dihapus, GOR kembali dibuka.');
     }
 }

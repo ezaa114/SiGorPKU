@@ -19,10 +19,17 @@ class BookingController extends Controller
 
     public function showVenue($id)
     {
-        // Query venue details, showing available fields and active available slots
-        $venue = Venue::with(['lapangans.jenisLapangan', 'lapangans.jadwals' => function($q) {
+        // Get closed dates for this venue
+        $closedDates = \App\Models\VenueClosure::where('id_venue', $id)
+            ->pluck('tanggal')
+            ->map(fn($d) => $d->toDateString())
+            ->toArray();
+
+        // Query venue details, showing available fields and active available slots, excluding closed dates
+        $venue = Venue::with(['lapangans.jenisLapangan', 'lapangans.jadwals' => function($q) use ($closedDates) {
             $q->where('ketersediaan', 'tersedia')
               ->whereBetween('tanggal', [now()->toDateString(), now()->addDays(2)->toDateString()])
+              ->whereNotIn('tanggal', $closedDates)
               ->orderBy('tanggal', 'asc')
               ->orderBy('jam_mulai', 'asc');
         }])->findOrFail($id);
@@ -52,6 +59,15 @@ class BookingController extends Controller
 
         if (!$jadwal->isTersedia()) {
             return redirect()->route('pelanggan.dashboard')->with('error', 'Maaf, slot jadwal tersebut baru saja dipesan oleh pengguna lain.');
+        }
+
+        // Check if GOR is closed on the slot date
+        $isClosed = \App\Models\VenueClosure::where('id_venue', $jadwal->lapangan->id_venue)
+            ->where('tanggal', $jadwal->tanggal->toDateString())
+            ->exists();
+            
+        if ($isClosed) {
+            return redirect()->route('pelanggan.dashboard')->with('error', 'Maaf, GOR ini sedang tutup pada tanggal tersebut.');
         }
 
         if (($jadwal->lapangan->venue->pemilikGor->status_verifikasi ?? 'pending') !== 'terverifikasi') {
@@ -108,6 +124,15 @@ class BookingController extends Controller
 
         if (!$jadwal->isTersedia()) {
             return redirect()->route('pelanggan.dashboard')->with('error', 'Maaf, slot jadwal tersebut telah dipesan orang lain.');
+        }
+
+        // Check if GOR is closed on the slot date
+        $isClosed = \App\Models\VenueClosure::where('id_venue', $jadwal->lapangan->id_venue)
+            ->where('tanggal', $jadwal->tanggal->toDateString())
+            ->exists();
+            
+        if ($isClosed) {
+            return redirect()->route('pelanggan.dashboard')->with('error', 'Maaf, GOR ini sedang tutup pada tanggal tersebut.');
         }
 
         if (($jadwal->lapangan->venue->pemilikGor->status_verifikasi ?? 'pending') !== 'terverifikasi') {

@@ -63,13 +63,16 @@
                             {{ $venue->lapangans()->count() }} Lapangan
                         </span>
                         
-                        <div class="flex gap-2">
-                            <a href="{{ route('pemilik.venue.edit', $venue->id_venue) }}" class="btn-secondary py-1 px-3 text-xs font-bold inline-flex items-center gap-1">
+                        <div class="flex gap-1.5">
+                            <a href="{{ route('pemilik.venue.closures', $venue->id_venue) }}" class="px-2.5 py-1 rounded-lg text-xs font-bold transition-all bg-amber-50 text-amber-700 hover:bg-amber-100 border border-amber-200 inline-flex items-center gap-1">
+                                <i class="fa-solid fa-calendar-minus text-[10px]"></i> Tutup Hari
+                            </a>
+                            <a href="{{ route('pemilik.venue.edit', $venue->id_venue) }}" class="btn-secondary py-1 px-2.5 text-xs font-bold inline-flex items-center gap-1">
                                 <i class="fa-solid fa-pen-to-square text-[10px]"></i> Edit
                             </a>
                             <form action="{{ route('pemilik.venue.delete', $venue->id_venue) }}" method="POST" class="inline">
                                 @csrf
-                                <button type="submit" class="btn-danger py-1 px-3 text-xs font-bold inline-flex items-center gap-1" onclick="return confirm('Apakah Anda yakin ingin menghapus GOR ini? Seluruh lapangan dan jadwal di dalamnya akan ikut terhapus.')">
+                                <button type="submit" class="btn-danger py-1 px-2.5 text-xs font-bold inline-flex items-center gap-1" onclick="return confirm('Apakah Anda yakin ingin menghapus GOR ini? Seluruh lapangan dan jadwal di dalamnya akan ikut terhapus.')">
                                     <i class="fa-solid fa-trash text-[10px]"></i> Hapus
                                 </button>
                             </form>
