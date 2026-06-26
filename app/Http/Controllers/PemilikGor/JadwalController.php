@@ -27,7 +27,18 @@ class JadwalController extends Controller
             ->orderBy('jam_mulai', 'asc')
             ->get();
 
-        return view('pemilik.jadwal.index', compact('jadwals'));
+        // Get all closures for the owner's venues
+        $pemilikId = Auth::guard('pemilik')->user()->id_pemilik;
+        $venueIds = Venue::where('id_pemilik', $pemilikId)->pluck('id_venue')->toArray();
+        $closures = \App\Models\VenueClosure::whereIn('id_venue', $venueIds)->get();
+        
+        // Group closures by venue_id and date for quick lookup
+        $closuresGrouped = [];
+        foreach ($closures as $c) {
+            $closuresGrouped[$c->id_venue][$c->tanggal->format('Y-m-d')] = $c;
+        }
+
+        return view('pemilik.jadwal.index', compact('jadwals', 'closuresGrouped'));
     }
 
     public function create()

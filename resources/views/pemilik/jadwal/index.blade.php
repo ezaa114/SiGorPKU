@@ -104,14 +104,20 @@
                             <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center bg-blue-50/50 border border-blue-100/50 rounded-xl p-3 px-4 text-xs font-semibold text-blue-800 gap-3">
                                 <span><i class="fa-solid fa-clock mr-1"></i> Slot Jam pada {{ \Carbon\Carbon::parse($dateStr)->isoFormat('dddd, D MMMM YYYY') }}</span>
                                 <div class="flex items-center gap-3">
-                                    <form action="{{ route('pemilik.venue.closures.store', $lapangan->id_venue) }}" method="POST" class="inline" onsubmit="return confirm('Apakah Anda yakin ingin menutup GOR ini pada tanggal {{ \Carbon\Carbon::parse($dateStr)->isoFormat('D MMMM YYYY') }}? Seluruh slot jadwal yang belum dipesan pada tanggal ini otomatis tidak dapat disewa.')">
-                                        @csrf
-                                        <input type="hidden" name="tanggal" value="{{ $dateStr }}">
-                                        <input type="hidden" name="keterangan" value="Ditutup dari halaman Jadwal">
-                                        <button type="submit" class="bg-red-500 hover:bg-red-600 text-white font-bold py-1 px-3 rounded-lg text-[10px] transition-all flex items-center gap-1 shadow-sm">
-                                            <i class="fa-solid fa-calendar-minus"></i> Tutup GOR pada Tanggal Ini
-                                        </button>
-                                    </form>
+                                    @if(isset($closuresGrouped[$lapangan->id_venue][$dateStr]))
+                                        <a href="{{ route('pemilik.venue.closures', $lapangan->id_venue) }}" class="bg-amber-500 hover:bg-amber-600 text-white font-bold py-1 px-3 rounded-lg text-[10px] transition-all flex items-center gap-1.5 shadow-sm shadow-amber-500/10" title="Klik untuk mengelola/membuka kembali GOR">
+                                            <i class="fa-solid fa-key"></i> GOR Ditutup pada Tanggal Ini (Kelola)
+                                        </a>
+                                    @else
+                                        <form action="{{ route('pemilik.venue.closures.store', $lapangan->id_venue) }}" method="POST" class="inline" onsubmit="return confirm('Apakah Anda yakin ingin menutup GOR ini pada tanggal {{ \Carbon\Carbon::parse($dateStr)->isoFormat('D MMMM YYYY') }}? Seluruh slot jadwal yang belum dipesan pada tanggal ini otomatis tidak dapat disewa.')">
+                                            @csrf
+                                            <input type="hidden" name="tanggal" value="{{ $dateStr }}">
+                                            <input type="hidden" name="keterangan" value="Ditutup dari halaman Jadwal">
+                                            <button type="submit" class="bg-red-500 hover:bg-red-600 text-white font-bold py-1 px-3 rounded-lg text-[10px] transition-all flex items-center gap-1 shadow-sm">
+                                                <i class="fa-solid fa-calendar-minus"></i> Tutup GOR pada Tanggal Ini
+                                            </button>
+                                        </form>
+                                    @endif
                                     <span class="bg-blue-100 text-blue-800 px-2 py-0.5 rounded-full text-[10px]">Total: {{ $slots->count() }} Slot</span>
                                 </div>
                             </div>
