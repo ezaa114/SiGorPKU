@@ -5,6 +5,21 @@
 
 @section('content')
 <div class="space-y-6">
+    <!-- Alert Flash Messages -->
+    @if(session('success'))
+        <div class="bg-emerald-50 border border-emerald-200 text-emerald-800 p-4 rounded-xl text-sm font-semibold flex items-center gap-2 shadow-sm animate-fade-in-up">
+            <i class="fa-solid fa-circle-check text-emerald-600"></i>
+            {{ session('success') }}
+        </div>
+    @endif
+
+    @if(session('error'))
+        <div class="bg-rose-50 border border-rose-200 text-rose-800 p-4 rounded-xl text-sm font-semibold flex items-center gap-2 shadow-sm animate-fade-in-up">
+            <i class="fa-solid fa-triangle-exclamation text-rose-600"></i>
+            {{ session('error') }}
+        </div>
+    @endif
+
     <div class="card p-6 bg-white border border-slate-100 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 animate-fade-in-up">
         <div>
             <h3 class="text-xl font-bold text-slate-800" style="font-family: 'Plus Jakarta Sans', sans-serif;">Pengelolaan Jadwal Lapangan</h3>
@@ -86,9 +101,19 @@
                             $hiddenClass = $isFirst ? '' : 'hidden';
                         @endphp
                         <div id="content-{{ $tabId }}" class="tab-content-{{ $lapanganId }} {{ $hiddenClass }} space-y-4">
-                            <div class="flex justify-between items-center bg-blue-50/50 border border-blue-100/50 rounded-xl p-3 px-4 text-xs font-semibold text-blue-800">
+                            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center bg-blue-50/50 border border-blue-100/50 rounded-xl p-3 px-4 text-xs font-semibold text-blue-800 gap-3">
                                 <span><i class="fa-solid fa-clock mr-1"></i> Slot Jam pada {{ \Carbon\Carbon::parse($dateStr)->isoFormat('dddd, D MMMM YYYY') }}</span>
-                                <span>Total: {{ $slots->count() }} Slot</span>
+                                <div class="flex items-center gap-3">
+                                    <form action="{{ route('pemilik.venue.closures.store', $lapangan->id_venue) }}" method="POST" class="inline" onsubmit="return confirm('Apakah Anda yakin ingin menutup GOR ini pada tanggal {{ \Carbon\Carbon::parse($dateStr)->isoFormat('D MMMM YYYY') }}? Seluruh slot jadwal yang belum dipesan pada tanggal ini otomatis tidak dapat disewa.')">
+                                        @csrf
+                                        <input type="hidden" name="tanggal" value="{{ $dateStr }}">
+                                        <input type="hidden" name="keterangan" value="Ditutup dari halaman Jadwal">
+                                        <button type="submit" class="bg-red-500 hover:bg-red-600 text-white font-bold py-1 px-3 rounded-lg text-[10px] transition-all flex items-center gap-1 shadow-sm">
+                                            <i class="fa-solid fa-calendar-minus"></i> Tutup GOR pada Tanggal Ini
+                                        </button>
+                                    </form>
+                                    <span class="bg-blue-100 text-blue-800 px-2 py-0.5 rounded-full text-[10px]">Total: {{ $slots->count() }} Slot</span>
+                                </div>
                             </div>
                             
                             <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
