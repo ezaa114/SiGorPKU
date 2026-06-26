@@ -1,6 +1,12 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
+    <script>
+        (function () {
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+        })();
+    </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title', 'SiGOR PKU') - Sistem Informasi Gedung Olahraga Pekanbaru</title>
@@ -32,6 +38,8 @@
                 <a href="{{ route('pelanggan.profile.edit') }}" class="text-sm font-semibold text-slate-600 hover:text-blue-600 transition-colors {{ request()->routeIs('pelanggan.profile*') ? 'text-blue-600' : '' }}">
                     Profil Saya
                 </a>
+
+                @include('components.theme-toggle')
 
                 <!-- User Dropdown / Profile -->
                 <div class="flex items-center gap-3 pl-4 border-l border-slate-100">

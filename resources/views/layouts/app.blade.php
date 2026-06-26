@@ -1,6 +1,12 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
+    <script>
+        (function () {
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+        })();
+    </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title', 'SiGOR PKU') - Portal Lapangan Olahraga Pekanbaru</title>
@@ -18,7 +24,10 @@
                     SiGOR <span class="text-slate-900">PKU</span>
                 </span>
             </a>
-            <span class="text-sm text-slate-500 font-medium hidden sm:inline">Pekanbaru Sports Portal</span>
+            <div class="flex items-center gap-4">
+                @include('components.theme-toggle')
+                <span class="text-sm text-slate-500 font-medium hidden sm:inline">Pekanbaru Sports Portal</span>
+            </div>
         </div>
     </header>
 

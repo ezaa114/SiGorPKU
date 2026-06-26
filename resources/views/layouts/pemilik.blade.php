@@ -1,6 +1,12 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
+    <script>
+        (function () {
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+        })();
+    </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title', 'Pemilik GOR Dashboard') - SiGOR PKU</title>
@@ -11,7 +17,7 @@
 <body class="bg-slate-50 min-h-screen flex flex-col md:flex-row">
 
     <!-- Sidebar Pemilik -->
-    <aside class="w-full md:w-64 bg-slate-900 text-white flex-shrink-0 flex flex-col justify-between border-r border-slate-800">
+    <aside class="w-full md:w-64 md:h-screen md:sticky md:top-0 md:overflow-y-auto bg-slate-900 text-white flex-shrink-0 flex flex-col justify-between border-r border-slate-800">
         <div>
             <!-- Sidebar Header -->
             <div class="p-6 border-b border-slate-800 flex justify-between items-center">
@@ -70,8 +76,11 @@
             <h2 class="text-xl font-bold text-slate-800" style="font-family: 'Plus Jakarta Sans', sans-serif;">
                 @yield('header_title', 'Dashboard')
             </h2>
-            <div class="text-sm text-slate-500 font-semibold">
-                {{ now()->isoFormat('D MMMM YYYY') }}
+            <div class="flex items-center gap-4">
+                @include('components.theme-toggle')
+                <div class="text-sm text-slate-500 font-semibold">
+                    {{ now()->isoFormat('D MMMM YYYY') }}
+                </div>
             </div>
         </header>
 

@@ -161,4 +161,43 @@ class AuthController extends Controller
 
         return redirect()->route('login')->with('success', 'Anda telah berhasil keluar.');
     }
+
+    public function showForgotPassword()
+    {
+        return view('auth.forgot-password');
+    }
+
+    public function resetPassword(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email',
+            'password' => 'required|string|min:6|confirmed',
+        ]);
+
+        // 1. Cari di Pelanggan
+        $pelanggan = Pelanggan::where('email', $request->email)->first();
+        if ($pelanggan) {
+            $pelanggan->password = Hash::make($request->password);
+            $pelanggan->save();
+            return redirect()->route('login')->with('success', 'Password Pelanggan berhasil direset! Silakan login.');
+        }
+
+        // 2. Cari di Pemilik GOR
+        $pemilik = PemilikGor::where('email', $request->email)->first();
+        if ($pemilik) {
+            $pemilik->password = Hash::make($request->password);
+            $pemilik->save();
+            return redirect()->route('login')->with('success', 'Password Pemilik GOR berhasil direset! Silakan login.');
+        }
+
+        // 3. Cari di Admin (User)
+        $admin = \App\Models\User::where('email', $request->email)->first();
+        if ($admin) {
+            $admin->password = Hash::make($request->password);
+            $admin->save();
+            return redirect()->route('login')->with('success', 'Password Admin berhasil direset! Silakan login.');
+        }
+
+        return back()->withErrors(['email' => 'Alamat email tidak terdaftar di sistem kami.'])->withInput();
+    }
 }

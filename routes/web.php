@@ -19,6 +19,9 @@ Route::middleware('guest')->group(function () {
 
     Route::get('/register/pemilik', [AuthController::class, 'showRegisterPemilik'])->name('register.pemilik');
     Route::post('/register/pemilik', [AuthController::class, 'registerPemilik']);
+
+    Route::get('/forgot-password', [AuthController::class, 'showForgotPassword'])->name('password.request');
+    Route::post('/forgot-password', [AuthController::class, 'resetPassword'])->name('password.update');
 });
 
 Route::get('/pemilik/pending', [AuthController::class, 'pendingPemilik'])

@@ -1,6 +1,12 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
+    <script>
+        (function () {
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+        })();
+    </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SiGOR PKU - Portal Marketplace Booking Lapangan Olahraga Pekanbaru</title>
@@ -32,6 +38,9 @@
             background: rgba(255, 255, 255, 0.8);
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
+        }
+        [data-theme="dark"] .glass-header {
+            background: rgba(26, 26, 26, 0.8) !important;
         }
         .glass-card {
             background: rgba(255, 255, 255, 0.08);
@@ -71,6 +80,7 @@
 
             <!-- Auth Buttons -->
             <div class="flex items-center gap-3">
+                @include('components.theme-toggle')
                 @if(Auth::guard('web')->check())
                     <a href="{{ route('admin.dashboard') }}" class="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold py-2.5 px-5 rounded-xl shadow-lg shadow-blue-500/10 text-xs transition-all flex items-center gap-1.5">
                         <i class="fa-solid fa-gauge"></i> Ke Dashboard
