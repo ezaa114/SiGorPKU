@@ -33,6 +33,7 @@
     },
     "scripts": {
         "vercel": [
+            "@php -r \"@unlink('bootstrap/cache/packages.php'); @unlink('bootstrap/cache/services.php');\"",
             "php artisan package:discover --ansi"
         ],
         "setup": [
