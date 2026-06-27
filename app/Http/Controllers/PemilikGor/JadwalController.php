@@ -23,7 +23,7 @@ class JadwalController extends Controller
         $lapanganIds = $this->getOwnerLapanganIds();
         $jadwals = Jadwal::whereIn('id_lapangan', $lapanganIds)
             ->with('lapangan.venue')
-            ->orderBy('tanggal', 'desc')
+            ->orderBy('tanggal', 'asc')
             ->orderBy('jam_mulai', 'asc')
             ->get();
 
