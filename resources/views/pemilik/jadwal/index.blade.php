@@ -137,14 +137,24 @@
                                     <div class="p-3 bg-slate-50 border border-slate-200/60 rounded-xl flex items-center justify-between shadow-sm">
                                         <div class="space-y-1">
                                             <span class="font-mono font-bold text-xs text-slate-700 block">{{ $jadwal->waktu }}</span>
-                                            @if($jadwal->ketersediaan === 'tersedia')
+                                            @if($isPassed)
+                                                @if($jadwal->ketersediaan === 'tersedia')
+                                                    <span class="text-[9px] text-slate-500 bg-slate-100 px-2 py-0.5 rounded-full font-bold border border-slate-200 uppercase tracking-wider">Kedaluwarsa</span>
+                                                @else
+                                                    <span class="text-[9px] text-slate-500 bg-slate-100 px-2 py-0.5 rounded-full font-bold border border-slate-200 uppercase tracking-wider" title="Jadwal sudah lampau">Selesai (Dipesan)</span>
+                                                @endif
+                                            @elseif($jadwal->ketersediaan === 'tersedia')
                                                 <span class="text-[9px] text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full font-bold border border-emerald-100 uppercase tracking-wider">Tersedia</span>
                                             @else
                                                 <span class="text-[9px] text-red-600 bg-red-50 px-2 py-0.5 rounded-full font-bold border border-red-100 uppercase tracking-wider">Dipesan</span>
                                             @endif
                                         </div>
                                         
-                                        @if($jadwal->ketersediaan === 'tersedia')
+                                        @if($isPassed)
+                                            <span class="text-[10px] text-slate-400 font-semibold p-1.5" title="Slot sudah lewat masa aktif">
+                                                <i class="fa-solid fa-clock-rotate-left"></i>
+                                            </span>
+                                        @elseif($jadwal->ketersediaan === 'tersedia')
                                             <form action="{{ route('pemilik.jadwal.delete', $jadwal->id_jadwal) }}" method="POST" class="inline">
                                                 @csrf
                                                 <button type="submit" class="text-red-500 hover:text-red-700 p-1.5 hover:bg-red-50 rounded-lg transition-colors" title="Hapus Slot" onclick="return confirm('Apakah Anda yakin ingin menghapus slot jadwal ini?')">
