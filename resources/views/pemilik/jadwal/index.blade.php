@@ -134,10 +134,15 @@
                             
                             <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
                                 @foreach($slots->sortBy('jam_mulai') as $jadwal)
+                                    @php
+                                        // A slot is passed if its date is before today, OR if its date is today and its end time has passed
+                                        $slotEndDateTime = \Carbon\Carbon::parse($jadwal->tanggal->format('Y-m-d') . ' ' . $jadwal->jam_selesai);
+                                        $isSlotPassed = $slotEndDateTime->isBefore(now());
+                                    @endphp
                                     <div class="p-3 bg-slate-50 border border-slate-200/60 rounded-xl flex items-center justify-between shadow-sm">
                                         <div class="space-y-1">
                                             <span class="font-mono font-bold text-xs text-slate-700 block">{{ $jadwal->waktu }}</span>
-                                            @if($isPassed)
+                                            @if($isSlotPassed)
                                                 @if($jadwal->ketersediaan === 'tersedia')
                                                     <span class="text-[9px] text-slate-500 bg-slate-100 px-2 py-0.5 rounded-full font-bold border border-slate-200 uppercase tracking-wider">Kedaluwarsa</span>
                                                 @else
@@ -150,7 +155,7 @@
                                             @endif
                                         </div>
                                         
-                                        @if($isPassed)
+                                        @if($isSlotPassed)
                                             <span class="text-[10px] text-slate-400 font-semibold p-1.5" title="Slot sudah lewat masa aktif">
                                                 <i class="fa-solid fa-clock-rotate-left"></i>
                                             </span>
