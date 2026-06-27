@@ -77,12 +77,22 @@
                             @php
                                 $carbonDate = \Carbon\Carbon::parse($dateStr);
                                 $formattedDate = $carbonDate->isoFormat('D MMM YYYY');
-                                $activeClass = $isFirst ? 'bg-blue-600 text-white shadow-md shadow-blue-500/20' : 'bg-slate-50 text-slate-600 border border-slate-200/60 hover:bg-slate-100';
+                                $isPassed = $carbonDate->lt(today());
+                                if ($isFirst) {
+                                    $activeClass = $isPassed 
+                                        ? 'bg-slate-400 text-white shadow-sm' 
+                                        : 'bg-blue-600 text-white shadow-md shadow-blue-500/20';
+                                } else {
+                                    $activeClass = $isPassed 
+                                        ? 'bg-slate-100/80 text-slate-400 border border-slate-200/40 hover:bg-slate-200/60' 
+                                        : 'bg-slate-50 text-slate-600 border border-slate-200/60 hover:bg-slate-100';
+                                }
                                 $tabId = "tab-{$lapanganId}-{$dateStr}";
                             @endphp
                             <button type="button" 
                                     onclick="switchTab('{{ $lapanganId }}', '{{ $dateStr }}')"
                                     id="btn-{{ $tabId }}"
+                                    data-passed="{{ $isPassed ? 'true' : 'false' }}"
                                     class="tab-btn-{{ $lapanganId }} px-3.5 py-2 text-xs font-bold rounded-xl transition-all {{ $activeClass }}">
                                 {{ $formattedDate }}
                                 <span class="ml-1 text-[10px] opacity-75 font-normal">({{ $slots->count() }})</span>
@@ -167,7 +177,12 @@
         // Reset all button styles for this court
         const buttons = document.querySelectorAll('.tab-btn-' + lapanganId);
         buttons.forEach(btn => {
-            btn.className = `tab-btn-${lapanganId} px-3.5 py-2 text-xs font-bold rounded-xl transition-all bg-slate-50 text-slate-600 border border-slate-200/60 hover:bg-slate-100`;
+            const isPassed = btn.getAttribute('data-passed') === 'true';
+            if (isPassed) {
+                btn.className = `tab-btn-${lapanganId} px-3.5 py-2 text-xs font-bold rounded-xl transition-all bg-slate-100/80 text-slate-400 border border-slate-200/40 hover:bg-slate-200/60`;
+            } else {
+                btn.className = `tab-btn-${lapanganId} px-3.5 py-2 text-xs font-bold rounded-xl transition-all bg-slate-50 text-slate-600 border border-slate-200/60 hover:bg-slate-100`;
+            }
         });
 
         // Show the active tab content
@@ -179,7 +194,12 @@
         // Set the clicked button to active state
         const targetButton = document.getElementById('btn-tab-' + lapanganId + '-' + dateStr);
         if (targetButton) {
-            targetButton.className = `tab-btn-${lapanganId} px-3.5 py-2 text-xs font-bold rounded-xl transition-all bg-blue-600 text-white shadow-md shadow-blue-500/20`;
+            const isPassed = targetButton.getAttribute('data-passed') === 'true';
+            if (isPassed) {
+                targetButton.className = `tab-btn-${lapanganId} px-3.5 py-2 text-xs font-bold rounded-xl transition-all bg-slate-400 text-white shadow-sm`;
+            } else {
+                targetButton.className = `tab-btn-${lapanganId} px-3.5 py-2 text-xs font-bold rounded-xl transition-all bg-blue-600 text-white shadow-md shadow-blue-500/20`;
+            }
         }
     }
 </script>
