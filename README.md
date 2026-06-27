@@ -2,6 +2,15 @@
 
 SiGOR PKU adalah platform digital berbasis web (*marketplace*) yang dirancang khusus untuk mempermudah penyewaan lapangan olahraga (seperti bulu tangkis, futsal, dll.) di wilayah Kota Pekanbaru. Platform ini mempertemukan pemilik gedung olahraga (GOR) dengan pelanggan yang ingin memesan lapangan secara real-time, praktis, dan aman.
 
+<p align="left">
+  <a href="https://laravel.com" target="_blank"><img src="https://img.shields.io/badge/Laravel-FF2D20?style=flat-square&logo=laravel&logoColor=white" alt="Laravel"></a>
+  <a href="https://www.php.net" target="_blank"><img src="https://img.shields.io/badge/PHP-777BB4?style=flat-square&logo=php&logoColor=white" alt="PHP"></a>
+  <a href="https://tailwindcss.com" target="_blank"><img src="https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=flat-square&logo=tailwind-css&logoColor=white" alt="Tailwind CSS"></a>
+  <a href="https://www.postgresql.org" target="_blank"><img src="https://img.shields.io/badge/PostgreSQL-316192?style=flat-square&logo=postgresql&logoColor=white" alt="PostgreSQL"></a>
+  <a href="https://supabase.com" target="_blank"><img src="https://img.shields.io/badge/Supabase-3ECF8E?style=flat-square&logo=supabase&logoColor=white" alt="Supabase"></a>
+  <a href="https://vercel.com" target="_blank"><img src="https://img.shields.io/badge/Vercel-000000?style=flat-square&logo=vercel&logoColor=white" alt="Vercel"></a>
+</p>
+
 ---
 
 ## 🛠️ Spesifikasi Teknologi & Bahasa Pemrograman
