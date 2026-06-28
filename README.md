@@ -231,6 +231,91 @@ graph TD
 
 ---
 
+## 👥 Pembagian Hak Akses & Fitur Pengguna (3 Role)
+
+Sistem SiGOR PKU mengimplementasikan 3 peran pengguna dengan hak akses terisolasi melalui Laravel Multi-Guard Authentication:
+
+### 1. Pelanggan (Customer)
+Peran ini ditujukan untuk masyarakat umum yang ingin menyewa lapangan olahraga secara mandiri.
+*   **Registrasi & Login**: Mendaftar akun dengan verifikasi email unik dan nomor telepon, lalu masuk menggunakan sistem guard pelanggan.
+*   **Pencarian & Eksplorasi Venue**: 
+    *   Mencari GOR berdasarkan nama atau kecamatan di wilayah Pekanbaru.
+    *   Melihat fasilitas, alamat lengkap, peta/koordinat, dan foto GOR.
+    *   Melihat daftar lapangan dan detail harga per jam pada masing-masing venue.
+*   **Pemesanan Lapangan (Booking)**:
+    *   Memilih tanggal sewa dan melihat ketersediaan slot jam secara real-time.
+    *   Memilih slot jam yang masih tersedia (slot yang sudah lewat otomatis tidak bisa dipilih).
+    *   Melakukan checkout pemesanan dengan informasi total biaya otomatis.
+*   **Transaksi Pembayaran**:
+    *   Melakukan transfer bank secara manual.
+    *   Mengunggah bukti transfer fisik berupa foto/gambar transaksi secara langsung ke sistem.
+*   **Riwayat & Pelacakan Booking**:
+    *   Memantau status pemesanan (menunggu pembayaran, menunggu konfirmasi, dikonfirmasi, atau dibatalkan).
+    *   Melihat riwayat transaksi penyewaan yang telah selesai atau kedaluwarsa.
+*   **Manajemen Profil**: Mengubah nama, kontak telepon, alamat email, serta mengganti kata sandi dengan toggle visibilitas password.
+
+### 2. Pemilik GOR (Venue Owner)
+Peran ini ditujukan bagi pelaku usaha pemilik gedung olahraga (GOR) di Pekanbaru.
+*   **Registrasi & Pengajuan Kemitraan**: Mendaftarkan diri dengan mengisi nama pemilik, nama usaha GOR, kontak, email, dan password. Status akun baru otomatis berstatus *pending* menunggu verifikasi Admin.
+*   **Manajemen Profil Usaha & Venue**:
+    *   Mengedit data GOR (nama venue, alamat lengkap, nomor telepon operasional, dan lokasi koordinat).
+    *   Mengunggah foto profil gedung olahraga (GOR) yang menarik.
+*   **Manajemen Lapangan**:
+    *   Menambahkan unit lapangan baru (misal: Lapangan 1, Lapangan 2).
+    *   Mengaitkan lapangan dengan kategori cabang olahraga (Badminton, Futsal, Basket, dll.).
+    *   Menentukan tarif sewa per jam dan mengunggah foto spesifik lapangan.
+*   **Penjadwalan Ketersediaan Lapangan**:
+    *   Membuat slot jadwal jam sewa operasional lapangan untuk tanggal tertentu secara dinamis.
+    *   Mengurutkan jadwal dari waktu terlama ke terbaru.
+    *   Slot waktu yang sudah kedaluwarsa otomatis berubah menjadi abu-abu dan tidak dapat dihapus demi integritas riwayat pemesanan.
+*   **Verifikasi & Konfirmasi Transaksi**:
+    *   Mendapatkan notifikasi pesanan masuk dari pelanggan.
+    *   Melihat dan memverifikasi bukti unggahan transfer bank dari pelanggan.
+    *   Menolak pembayaran (jika tidak valid) atau menyetujui transaksi (mengubah status pesanan menjadi *dikonfirmasi*).
+*   **Hari Libur & Tutup Sementara (Venue Closures)**: Menetapkan tanggal tertentu di mana venue sedang libur, renovasi, atau hari besar sehingga seluruh pemesanan pada hari tersebut ditutup secara otomatis.
+
+### 3. Administrator (Admin Utama)
+Peran pengawas sistem yang dipegang oleh pengembang/pengelola utama platform SiGOR PKU.
+*   **Verifikasi Kemitraan Pemilik GOR**: 
+    *   Memeriksa pendaftaran pemilik GOR baru yang berstatus pending.
+    *   Melihat detail data usaha dan melakukan approval (menyetujui status menjadi *terverifikasi*) atau menolak pendaftaran.
+    *   Pemilik GOR yang ditolak otomatis tidak bisa login dan mendapatkan notifikasi penolakan.
+*   **Manajemen Kategori / Jenis Lapangan**: Melakukan operasi CRUD (Create, Read, Update, Delete) kategori olahraga resmi seperti Bulutangkis, Futsal, Mini Soccer, Voli, Basket, dll.
+*   **Monitoring Seluruh Transaksi**: Memantau seluruh pemesanan lapangan olahraga, total nilai transaksi, dan riwayat pembayaran di seluruh GOR yang aktif dalam platform.
+*   **Manajemen Pengguna (Kelola Pelanggan)**:
+    *   Melihat daftar seluruh pelanggan terdaftar di platform.
+    *   Melakukan pemblokiran (*block*) akun pelanggan bermasalah secara langsung.
+    *   Membuka blokir (*unblock*) akun kembali jika masalah selesai.
+    *   Middleware sistem secara dinamis mendeteksi pemblokiran secara real-time dan memaksa logout paksa jika akun tersebut sedang mengakses situs.
+
+---
+
+## ⚙️ Arsitektur Fitur & Fungsi Frontend-Backend
+
+SiGOR PKU memisahkan fungsi frontend dan backend dengan rapi untuk menghadirkan pengalaman pengguna yang responsif sekaligus aman:
+
+### Sisi Frontend (Client-Side)
+*   **Interaktivitas Dinamis**:
+    *   **Toggle Mode Gelap/Terang (Dark/Light Mode)**: Tersimpan secara gigih (*persistent*) pada penyimpanan lokal browser (*localStorage*) sehingga konsisten saat berganti halaman.
+    *   **Tampilkan/Sembunyikan Sandi**: Penanganan manipulasi tipe input DOM menggunakan Javascript murni demi mempermudah pengguna mengetik kata sandi tanpa salah ketik.
+    *   **Dashboard Responsif**: Pemanfaatan CSS Grid dan Flexbox Tailwind untuk memastikan seluruh halaman dashboard (Admin, Pemilik, Pelanggan) tampil sempurna di perangkat mobile maupun desktop.
+*   **Penyajian Data Dinamis**:
+    *   Indikator visual dinamis (badge berwarna hijau untuk sukses/terverifikasi, kuning untuk menunggu/proses, merah untuk batal/blokir, abu-abu untuk kedaluwarsa).
+    *   Penyaringan daftar tanggal jadwal secara kronologis.
+
+### Sisi Backend (Server-Side)
+*   **Sistem Autentikasi Multi-Guard**:
+    *   Memanfaatkan 3 guard Laravel terpisah (`web` untuk Admin, `pemilik` untuk Pemilik GOR, dan `pelanggan` untuk Pelanggan).
+    *   Middleware dinamis (`RoleAdmin`, `RolePemilik`, `RolePelanggan`) memvalidasi setiap permintaan akses halaman dan menjaga gerbang rute secara aman.
+*   **Manajemen Basis Data Relasional**:
+    *   Eloquent ORM untuk penulisan kueri relasi yang aman, seperti pemanggilan relasi GOR ke Lapangan, Lapangan ke Jadwal, dan Pemesanan ke Pembayaran.
+    *   Migrasi database yang terstruktur dengan integrasi PostgreSQL Supabase.
+*   **Validasi Masukan & Pengamanan File**:
+    *   Validasi form yang ketat untuk registrasi, login, dan penginputan data sewa.
+    *   Sistem penanganan file bukti transfer yang aman, menyimpannya di storage lokal serverless dan mencegah format file yang tidak didukung.
+
+---
+
 ## 🚀 Panduan Instalasi Lokal
 
 Ikuti langkah-langkah di bawah ini untuk menjalankan proyek ini di komputer lokal Anda:
