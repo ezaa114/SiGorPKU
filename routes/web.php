@@ -40,6 +40,10 @@ Route::middleware(['role.admin'])->prefix('admin')->name('admin.')->group(functi
     Route::get('/pemilik-gor/{id}', [Admin\PemilikGorController::class, 'show'])->name('pemilik-gor.show');
     Route::post('/pemilik-gor/{id}/verifikasi', [Admin\PemilikGorController::class, 'verifikasi'])->name('pemilik-gor.verifikasi');
 
+    // Kelola Pelanggan
+    Route::get('/pelanggan', [Admin\PelangganController::class, 'index'])->name('pelanggan.index');
+    Route::post('/pelanggan/{id}/toggle-status', [Admin\PelangganController::class, 'toggleStatus'])->name('pelanggan.toggle-status');
+
     // Jenis Lapangan CRUD
     Route::get('/jenis-lapangan', [Admin\JenisLapanganController::class, 'index'])->name('jenis-lapangan.index');
     Route::get('/jenis-lapangan/create', [Admin\JenisLapanganController::class, 'create'])->name('jenis-lapangan.create');

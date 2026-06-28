@@ -50,6 +50,11 @@ class AuthController extends Controller
 
         // 2. Coba Pelanggan
         if (Auth::guard('pelanggan')->attempt($credentials, $request->boolean('remember'))) {
+            $pelanggan = Auth::guard('pelanggan')->user();
+            if ($pelanggan->status === 'diblokir') {
+                Auth::guard('pelanggan')->logout();
+                return back()->withErrors(['email' => 'Akun Anda telah diblokir oleh Admin. Silakan hubungi customer service.']);
+            }
             $request->session()->regenerate();
             return redirect()->route('pelanggan.dashboard')->with('success', 'Login berhasil!');
         }

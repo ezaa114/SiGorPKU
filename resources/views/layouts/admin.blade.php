@@ -37,6 +37,9 @@
                 <a href="{{ route('admin.pemilik-gor.index') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-semibold transition-all {{ request()->routeIs('admin.pemilik-gor*') ? 'bg-blue-600 text-white shadow-md' : 'text-slate-400 hover:bg-slate-800 hover:text-white' }}">
                     <i class="fa-solid fa-user-check w-5 text-center"></i> Verifikasi Pemilik
                 </a>
+                <a href="{{ route('admin.pelanggan.index') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-semibold transition-all {{ request()->routeIs('admin.pelanggan*') ? 'bg-blue-600 text-white shadow-md' : 'text-slate-400 hover:bg-slate-800 hover:text-white' }}">
+                    <i class="fa-solid fa-users w-5 text-center"></i> Kelola Pelanggan
+                </a>
                 <a href="{{ route('admin.jenis-lapangan.index') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-semibold transition-all {{ request()->routeIs('admin.jenis-lapangan*') ? 'bg-blue-600 text-white shadow-md' : 'text-slate-400 hover:bg-slate-800 hover:text-white' }}">
                     <i class="fa-solid fa-layer-group w-5 text-center"></i> Jenis Lapangan
                 </a>

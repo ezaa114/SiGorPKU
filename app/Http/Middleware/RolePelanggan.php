@@ -12,6 +12,11 @@ class RolePelanggan
     public function handle(Request $request, Closure $next): Response
     {
         if (Auth::guard('pelanggan')->check()) {
+            $pelanggan = Auth::guard('pelanggan')->user();
+            if ($pelanggan->status === 'diblokir') {
+                Auth::guard('pelanggan')->logout();
+                return redirect()->route('login')->withErrors(['email' => 'Akun Anda telah diblokir oleh Admin.']);
+            }
             return $next($request);
         }
 

@@ -17,6 +17,7 @@ class Pelanggan extends Authenticatable
         'no_telepon',
         'email',
         'password',
+        'status',
     ];
 
     protected $hidden = ['password'];
