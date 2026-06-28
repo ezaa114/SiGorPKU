@@ -54,6 +54,7 @@ erDiagram
         string no_telepon "varchar(20)"
         string email "varchar(100) UNIQUE"
         string password "varchar(255)"
+        string status "enum('aktif', 'diblokir')"
         timestamp created_at
         timestamp updated_at
     }
@@ -191,6 +192,7 @@ graph TD
         UC12(Login Akun Admin)
         UC13(Verifikasi & Approve Akun Pemilik GOR Baru)
         UC14(Kelola Kategori Olahraga Jenis Lapangan)
+        UC15(Kelola Akun Pelanggan Blokir/Buka Blokir)
     end
 
     %% Relations for Pelanggan
@@ -212,6 +214,7 @@ graph TD
     Admin --> UC12
     Admin --> UC13
     Admin --> UC14
+    Admin --> UC15
 ```
 
 ---
@@ -219,10 +222,12 @@ graph TD
 ## ✨ Fitur Utama Sistem
 
 1.  **Multi-Guard Authentication**: Sistem memisahkan sesi login untuk Admin, Pemilik GOR, dan Pelanggan secara terisolasi demi keamanan hak akses data.
-2.  **Manajemen Jadwal Dinamis**: Pemilik GOR dapat dengan fleksibel menjadwalkan slot jam ketersediaan lapangan sesuai dengan jam operasional nyata.
-3.  **Sistem Upload Bukti Transfer**: Pembayaran menggunakan sistem transfer bank tradisional di mana bukti fisik transfer dapat langsung diunggah oleh penyewa untuk kemudian divalidasi manual oleh pemilik GOR.
-4.  **Sistem Penutupan GOR (Closure Date)**: Pemilik GOR dapat menutup seluruh operasional GOR pada tanggal tertentu (misalnya karena renovasi atau hari raya) sehingga pelanggan tidak dapat memesan pada hari tersebut.
-5.  **Aesthetics Switcher (Tema Gelap/Terang)**: Antarmuka modern yang mendukung penyesuaian visual (*dark mode* dan *light mode*) yang gigih (*persistent*) menggunakan penyimpanan lokal (*local storage*).
+2.  **Manajemen Jadwal Dinamis & Deteksi Slot Kedaluwarsa**: Pemilik GOR dapat menjadwalkan slot waktu ketersediaan lapangan secara dinamis. Jam dan tanggal diurutkan berdasarkan waktu terlama ke terbaru dengan penanda visual abu-abu (*muted*) jika waktu slot telah terlampaui di real-time (WIB Asia/Jakarta), serta menyembunyikan tombol hapus untuk keamanan data riwayat.
+3.  **Manajemen Pemblokiran Pengguna**: Administrator memiliki akses langsung untuk mengelola akun pelanggan, memblokir akses pengguna bermasalah, dan membuka blokir. Sesi pengguna dibatalkan secara real-time oleh middleware ketika akun diblokir.
+4.  **Toggle Visibilitas Password (Eye Icon Toggle)**: Mempermudah pengetikan dengan menghadirkan tombol interaktif berikon mata untuk menampilkan/menyembunyikan teks kata sandi pada halaman login, registrasi, lupa password, dan edit profil.
+5.  **Sistem Upload Bukti Transfer**: Pembayaran menggunakan sistem transfer bank tradisional di mana bukti fisik transfer dapat langsung diunggah oleh penyewa untuk kemudian divalidasi manual oleh pemilik GOR.
+6.  **Sistem Penutupan GOR (Closure Date)**: Pemilik GOR dapat menutup seluruh operasional GOR pada tanggal tertentu (misalnya karena renovasi atau hari raya) sehingga pelanggan tidak dapat memesan pada hari tersebut.
+7.  **Aesthetics Switcher (Tema Gelap/Terang)**: Antarmuka modern yang mendukung penyesuaian visual (*dark mode* dan *light mode*) yang gigih (*persistent*) menggunakan penyimpanan lokal (*local storage*).
 
 ---
 
