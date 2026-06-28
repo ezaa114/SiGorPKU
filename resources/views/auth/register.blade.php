@@ -103,8 +103,11 @@
                 <div class="relative flex items-center">
                     <i class="fa-solid fa-lock absolute left-4 text-slate-400 text-sm"></i>
                     <input type="password" id="pass_pelanggan" name="password" required 
-                           class="w-full auth-input border rounded-xl pl-11 pr-4 py-3 text-xs focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition" 
+                           class="w-full auth-input border rounded-xl pl-11 pr-12 py-3 text-xs focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition" 
                            placeholder="Minimal 6 karakter">
+                    <button type="button" onclick="togglePasswordVisibility('pass_pelanggan', 'toggle-pass-pelanggan')" class="absolute right-4 text-slate-400 hover:text-slate-300 transition-colors focus:outline-none" title="Tampilkan/Sembunyikan Password">
+                        <i id="toggle-pass-pelanggan" class="fa-solid fa-eye text-sm"></i>
+                    </button>
                 </div>
             </div>
 
@@ -113,8 +116,11 @@
                 <div class="relative flex items-center">
                     <i class="fa-solid fa-check-double absolute left-4 text-slate-400 text-sm"></i>
                     <input type="password" id="confirm_pelanggan" name="password_confirmation" required 
-                           class="w-full auth-input border rounded-xl pl-11 pr-4 py-3 text-xs focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition" 
+                           class="w-full auth-input border rounded-xl pl-11 pr-12 py-3 text-xs focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition" 
                            placeholder="Ulangi password">
+                    <button type="button" onclick="togglePasswordVisibility('confirm_pelanggan', 'toggle-confirm-pelanggan')" class="absolute right-4 text-slate-400 hover:text-slate-300 transition-colors focus:outline-none" title="Tampilkan/Sembunyikan Password">
+                        <i id="toggle-confirm-pelanggan" class="fa-solid fa-eye text-sm"></i>
+                    </button>
                 </div>
             </div>
 
@@ -171,8 +177,11 @@
                 <div class="relative flex items-center">
                     <i class="fa-solid fa-lock absolute left-4 text-slate-400 text-sm"></i>
                     <input type="password" id="pass_pemilik" name="password" required 
-                           class="w-full auth-input border rounded-xl pl-11 pr-4 py-3 text-xs focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition" 
+                           class="w-full auth-input border rounded-xl pl-11 pr-12 py-3 text-xs focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition" 
                            placeholder="Minimal 6 karakter">
+                    <button type="button" onclick="togglePasswordVisibility('pass_pemilik', 'toggle-pass-pemilik')" class="absolute right-4 text-slate-400 hover:text-slate-300 transition-colors focus:outline-none" title="Tampilkan/Sembunyikan Password">
+                        <i id="toggle-pass-pemilik" class="fa-solid fa-eye text-sm"></i>
+                    </button>
                 </div>
             </div>
 
@@ -181,8 +190,11 @@
                 <div class="relative flex items-center">
                     <i class="fa-solid fa-check-double absolute left-4 text-slate-400 text-sm"></i>
                     <input type="password" id="confirm_pemilik" name="password_confirmation" required 
-                           class="w-full auth-input border rounded-xl pl-11 pr-4 py-3 text-xs focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition" 
+                           class="w-full auth-input border rounded-xl pl-11 pr-12 py-3 text-xs focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition" 
                            placeholder="Ulangi password">
+                    <button type="button" onclick="togglePasswordVisibility('confirm_pemilik', 'toggle-confirm-pemilik')" class="absolute right-4 text-slate-400 hover:text-slate-300 transition-colors focus:outline-none" title="Tampilkan/Sembunyikan Password">
+                        <i id="toggle-confirm-pemilik" class="fa-solid fa-eye text-sm"></i>
+                    </button>
                 </div>
             </div>
 
@@ -201,6 +213,23 @@
     </div>
 
     <script>
+        function togglePasswordVisibility(inputId, iconId) {
+            const passwordInput = document.getElementById(inputId);
+            const toggleIcon = document.getElementById(iconId);
+            
+            if (passwordInput && toggleIcon) {
+                if (passwordInput.type === 'password') {
+                    passwordInput.type = 'text';
+                    toggleIcon.classList.remove('fa-eye');
+                    toggleIcon.classList.add('fa-eye-slash');
+                } else {
+                    passwordInput.type = 'password';
+                    toggleIcon.classList.remove('fa-eye-slash');
+                    toggleIcon.classList.add('fa-eye');
+                }
+            }
+        }
+
         function switchTab(role) {
             const tabPelanggan = document.getElementById('tab-pelanggan');
             const tabPemilik = document.getElementById('tab-pemilik');

@@ -78,15 +78,44 @@
                 <div class="space-y-4">
                     <div>
                         <label for="password" class="form-label">Password Baru</label>
-                        <input type="password" id="password" name="password" class="form-input" placeholder="Masukkan password baru minimal 6 karakter">
+                        <div class="relative flex items-center">
+                            <input type="password" id="password" name="password" class="form-input pr-10" placeholder="Masukkan password baru minimal 6 karakter">
+                            <button type="button" onclick="togglePasswordVisibility('password', 'toggle-password-icon-1')" class="absolute right-3.5 text-slate-400 hover:text-slate-600 transition-colors focus:outline-none" title="Tampilkan/Sembunyikan Password">
+                                <i id="toggle-password-icon-1" class="fa-solid fa-eye text-sm"></i>
+                            </button>
+                        </div>
                     </div>
                     
                     <div>
                         <label for="password_confirmation" class="form-label">Konfirmasi Password Baru</label>
-                        <input type="password" id="password_confirmation" name="password_confirmation" class="form-input" placeholder="Ulangi password baru">
+                        <div class="relative flex items-center">
+                            <input type="password" id="password_confirmation" name="password_confirmation" class="form-input pr-10" placeholder="Ulangi password baru">
+                            <button type="button" onclick="togglePasswordVisibility('password_confirmation', 'toggle-password-icon-2')" class="absolute right-3.5 text-slate-400 hover:text-slate-600 transition-colors focus:outline-none" title="Tampilkan/Sembunyikan Password">
+                                <i id="toggle-password-icon-2" class="fa-solid fa-eye text-sm"></i>
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
+
+            <script>
+                function togglePasswordVisibility(inputId, iconId) {
+                    const passwordInput = document.getElementById(inputId);
+                    const toggleIcon = document.getElementById(iconId);
+                    
+                    if (passwordInput && toggleIcon) {
+                        if (passwordInput.type === 'password') {
+                            passwordInput.type = 'text';
+                            toggleIcon.classList.remove('fa-eye');
+                            toggleIcon.classList.add('fa-eye-slash');
+                        } else {
+                            passwordInput.type = 'password';
+                            toggleIcon.classList.remove('fa-eye-slash');
+                            toggleIcon.classList.add('fa-eye');
+                        }
+                    }
+                }
+            </script>
 
             <button type="submit" class="w-full btn-primary py-3 text-sm font-bold shadow-lg shadow-blue-500/20 mt-6">
                 Simpan Perubahan

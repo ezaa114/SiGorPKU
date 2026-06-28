@@ -83,8 +83,11 @@
                 <div class="relative flex items-center">
                     <i class="fa-solid fa-lock absolute left-4 text-slate-400 text-sm"></i>
                     <input type="password" id="password" name="password" required 
-                           class="w-full auth-input border rounded-xl pl-11 pr-4 py-3.5 text-sm focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition" 
+                           class="w-full auth-input border rounded-xl pl-11 pr-12 py-3.5 text-sm focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition" 
                            placeholder="Minimal 6 karakter">
+                    <button type="button" onclick="togglePasswordVisibility('password', 'toggle-pass-forgot')" class="absolute right-4 text-slate-400 hover:text-slate-300 transition-colors focus:outline-none" title="Tampilkan/Sembunyikan Password">
+                        <i id="toggle-pass-forgot" class="fa-solid fa-eye text-sm"></i>
+                    </button>
                 </div>
             </div>
 
@@ -94,8 +97,11 @@
                 <div class="relative flex items-center">
                     <i class="fa-solid fa-check-double absolute left-4 text-slate-400 text-sm"></i>
                     <input type="password" id="password_confirmation" name="password_confirmation" required 
-                           class="w-full auth-input border rounded-xl pl-11 pr-4 py-3.5 text-sm focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition" 
+                           class="w-full auth-input border rounded-xl pl-11 pr-12 py-3.5 text-sm focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition" 
                            placeholder="Ulangi password baru">
+                    <button type="button" onclick="togglePasswordVisibility('password_confirmation', 'toggle-confirm-forgot')" class="absolute right-4 text-slate-400 hover:text-slate-300 transition-colors focus:outline-none" title="Tampilkan/Sembunyikan Password">
+                        <i id="toggle-confirm-forgot" class="fa-solid fa-eye text-sm"></i>
+                    </button>
                 </div>
             </div>
 
@@ -112,5 +118,23 @@
 
     </div>
 
+    <script>
+        function togglePasswordVisibility(inputId, iconId) {
+            const passwordInput = document.getElementById(inputId);
+            const toggleIcon = document.getElementById(iconId);
+            
+            if (passwordInput && toggleIcon) {
+                if (passwordInput.type === 'password') {
+                    passwordInput.type = 'text';
+                    toggleIcon.classList.remove('fa-eye');
+                    toggleIcon.classList.add('fa-eye-slash');
+                } else {
+                    passwordInput.type = 'password';
+                    toggleIcon.classList.remove('fa-eye-slash');
+                    toggleIcon.classList.add('fa-eye');
+                }
+            }
+        }
+    </script>
 </body>
 </html>
